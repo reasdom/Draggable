@@ -1,6 +1,10 @@
 $(document).ready(function () {
+
     $(function () {
         $("#itemTable tbody").sortable({
+            update: function (event, ui) {
+                app.updateOrders();
+            }
         });
     });
 
@@ -19,6 +23,20 @@ $(document).ready(function () {
                     "order": order,
                     "name": "Item " + order
                 });
+            },
+            updateOrders: function () {
+                var newOrder = $('#itemTable tbody').sortable("toArray");
+                $("#itemTable tbody").sortable("cancel");
+                var newItemList = [];
+                for (var i = 0; i < newOrder.length; i++) {
+                    if (this.items[parseInt(newOrder[i].replace("item-", ''))] != null) {
+                        newItemList.push({
+                            "order": i,
+                            "name": this.items[parseInt(newOrder[i].replace("item-", ''))].name,
+                        });
+                    }
+                }
+                this.items = newItemList;
             }
         }
     });
